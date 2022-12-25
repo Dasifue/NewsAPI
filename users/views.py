@@ -16,7 +16,7 @@ class UserCreateAPIView(APIView):
                 "username": "char field, max_length 150, unique, required",
                 "email": "email field, not required",
                 "password1": "char field, max_length 128, required",
-                "password1": "char field, max_length 128, required"
+                "password2": "char field, max_length 128, required"
             }
         }
         return Response(data=data, status=status.HTTP_200_OK)
@@ -26,6 +26,6 @@ class UserCreateAPIView(APIView):
         if user.is_valid():
             user.check_data_is_correct()
             user.to_capitalize()
-            user.create(validated_data=user.validated_data)
+            user.create()
             return Response(data=user.validated_data, status=status.HTTP_201_CREATED)
         return Response(data={"error": "data is not valid"}, status=status.HTTP_400_BAD_REQUEST)

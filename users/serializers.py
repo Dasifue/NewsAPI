@@ -63,17 +63,18 @@ class UserCreateSerializer(serializers.ModelSerializer):
         if not self._check_email_is_real():
             return Response(data={"error": "email is not real"}, status=status.HTTP_400_BAD_REQUEST)
 
-    def create(self, validated_data):
-        first_name = validated_data.get("first_name") if validated_data.get("first_name") else ""
-        last_name = validated_data.get("last_name") if validated_data.get("last_name") else ""
-        email = validated_data.get("email") if validated_data.get("email") else ""
+    def create(self):
+        first_name = self.validated_data.get("first_name") if self.validated_data.get("first_name") else ""
+        last_name = self.validated_data.get("last_name") if self.validated_data.get("last_name") else ""
+        email = self.validated_data.get("email") if self.validated_data.get("email") else ""
+        username = self.validated_data.get("username")
+        password = self.validated_data.get("passwrod1")
         user = User.objects.create(
             first_name = first_name,
             last_name = last_name,
-            username = validated_data.get("username"),
+            username = username,
             email = email
         )
-        user.set_password(validated_data.get("password1"))
-        return user
+        user.set_password(password)
 
 
