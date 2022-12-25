@@ -1,9 +1,16 @@
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from .serializers import UserCreateSerializer
+from .models import MainUser
+
+from .serializers import (
+    UserCreateSerializer,
+    UsersListSerializer,
+    UserDetailsSerializer,
+    UserUpdateSerializer
+)
 
 class UserCreateAPIView(APIView):
 
@@ -29,3 +36,27 @@ class UserCreateAPIView(APIView):
             user.create()
             return Response(data=user.validated_data, status=status.HTTP_201_CREATED)
         return Response(data={"error": "data is not valid"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UsersListAPIView(ListAPIView):
+    queryset = MainUser.objects.all()#filter(is_staff=False, is_active=True)
+    serializer_class = UsersListSerializer
+
+
+class UserDetailsAPIView(RetrieveAPIView):
+    queryset = MainUser.objects.filter(is_staff=False, is_active=True)
+    serializer_class = UserDetailsSerializer
+    lookup_field = 'pk'
+
+
+class UserUpdateAPIView(APIView):
+
+    def get(self, request, pk):
+        try:
+            user = MainUser.objects.get(pk=pk)
+            if request.user == user:
+                user = UserUpdateSerializer(instance=user)
+                return Response(data=user.data, status=status.HTTP_200_OK)
+            return Response(data={"error": "not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+        except MainUser.DoesNotExist:
+            return Response(data={"error": "not found"}, status=status.HTTP_404_NOT_FOUND)

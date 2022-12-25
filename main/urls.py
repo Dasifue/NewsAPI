@@ -18,11 +18,19 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from users.views import UserCreateAPIView
+from users.views import (
+    UserCreateAPIView,
+    UsersListAPIView,
+    UserDetailsAPIView,
+    UserUpdateAPIView
+    )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/user/register/', view=UserCreateAPIView.as_view(), name="register"),
     path('api/user/', include('rest_framework.urls')),
+    path('api/users/list', UsersListAPIView.as_view(), name="users_list"),
+    path('api/user/details/<int:pk>', UserDetailsAPIView.as_view(), name="user_details"),
+    path('api/user/update/<int:pk>', UserUpdateAPIView.as_view(), name="user_update"),
     path('api/', include('api.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

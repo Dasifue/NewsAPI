@@ -14,7 +14,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(max_length=128, min_length=8)
 
     class Meta:
-        model = User
+        model = MainUser
         fields = (
             "first_name",
             "last_name",
@@ -69,7 +69,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         email = self.validated_data.get("email") if self.validated_data.get("email") else ""
         username = self.validated_data.get("username")
         password = self.validated_data.get("passwrod1")
-        user = User.objects.create(
+        user = MainUser.objects.create(
             first_name = first_name,
             last_name = last_name,
             username = username,
@@ -78,3 +78,35 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user.set_password(password)
 
 
+class UserDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MainUser
+        fields = (
+            "id",
+            "image", 
+            "first_name", 
+            "last_name", 
+            "username", 
+            "email"
+            )
+
+class UsersListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MainUser
+        fields = (
+            "id",
+            "image", 
+            "username"
+            )
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MainUser
+        fields = (
+            "image",
+            "first_name",
+            "last_name",
+            "username",
+            "email"
+            )    
