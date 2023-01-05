@@ -33,7 +33,7 @@ class UserCreateAPIView(APIView):
         if user.is_valid():
             user.check_data_is_correct()
             user.to_capitalize()
-            user.create()
+            user.create(user.validated_data)
             return Response(data=user.validated_data, status=status.HTTP_201_CREATED)
         return Response(data={"error": "data is not valid"}, status=status.HTTP_400_BAD_REQUEST)
 
