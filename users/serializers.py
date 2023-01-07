@@ -32,43 +32,26 @@ class UserCreateSerializer(serializers.ModelSerializer):
         if last_name:
             self.validated_data["last_name"] = last_name.capitalize()
 
-    def _check_email_exists(self):
-        email = self.validated_data.get("email")
-        if MainUser.objects.filter(email=email).exists():
-            return True
-        return False
 
-    def _check_email_is_real(self):
-        email = self.validated_data.get("email")
-        if not email:
-            return True
-        try:
-            validate_email(email)
-            return True
-        except ValidationError:
-            return False
-
-    def _are_passwords_matching(self):
+    def passwords_do_not_match(self):
         password1 = self.validated_data.get("password1")
         password2 = self.validated_data.get("password2")
-        if password1 == password2:
+        if password1 != password2:
             return True
-        return False
 
-    def check_data_is_correct(self):
-        if not self._are_passwords_matching():
-            return Response(data={"error": "passwords are not matching"}, status=status.HTTP_400_BAD_REQUEST)
-        if self._check_email_exists():
-            return Response(data={"error": "email is already registered"}, status=status.HTTP_400_BAD_REQUEST)
-        if not self._check_email_is_real():
-            return Response(data={"error": "email is not real"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def email_is_registerd(self):
+        email = self.validated_data.get("email")
+        if MainUser.objects.filter(email=email):
+            return True
+
 
     def create(self, validated_data):
         first_name = validated_data.get("first_name") if validated_data.get("first_name") else ""
         last_name = validated_data.get("last_name") if validated_data.get("last_name") else ""
         email = validated_data.get("email") if validated_data.get("email") else ""
         username = validated_data.get("username")
-        password = validated_data.get("passwrod1")
+        password = validated_data.get("password1")
         user = MainUser.objects.create_user(
             first_name = first_name,
             last_name = last_name,
@@ -92,6 +75,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
             "email"
             )
 
+
 class UsersListSerializer(serializers.ModelSerializer):
     class Meta:
         model = MainUser
@@ -112,3 +96,15 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             "username",
             "email"
             )    
+
+
+class UserPasswordUpdateSerializer(serializers.Serializer):    
+    password = serializers.CharField(max_length=128, min_length=8)
+    new_password = serializers.CharField(max_length=128, min_length=8)
+    password_confirmation = serializers.CharField(max_length=128, min_length=8)
+
+    def save(self, intance):
+        password = self.validated_data.get('new_password')
+        intance.set_password(password)
+        intance.save()
+        return intance

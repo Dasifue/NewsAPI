@@ -22,7 +22,8 @@ from users.views import (
     UserCreateAPIView,
     UsersListAPIView,
     UserDetailsAPIView,
-    UserUpdateAPIView
+    UserUpdateDeleteAPIView,
+    UserPasswordUpdateAPIView
     )
 
 urlpatterns = [
@@ -31,6 +32,7 @@ urlpatterns = [
     path('api/user/', include('rest_framework.urls')),
     path('api/users/list', UsersListAPIView.as_view(), name="users_list"),
     path('api/user/details/<int:pk>', UserDetailsAPIView.as_view(), name="user_details"),
-    path('api/user/update/<int:pk>', UserUpdateAPIView.as_view(), name="user_update"),
+    path('api/user/update/', UserUpdateDeleteAPIView.as_view(), name="user_update"),
+    path('api/user/change_password/', UserPasswordUpdateAPIView.as_view(), name="password_update"),
     path('api/', include('api.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
