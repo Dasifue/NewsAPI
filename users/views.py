@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import MainUser
+from api.models import Post
 
 from .serializers import (
     UserCreateSerializer,
@@ -14,6 +15,8 @@ from .serializers import (
 )
 
 from rest_framework.permissions import IsAuthenticated 
+
+from api.serializers.posts_serializer import UsersPostsListSerializer
 
 class UserCreateAPIView(CreateAPIView):
     model = MainUser
@@ -55,6 +58,21 @@ class UserDetailsAPIView(RetrieveAPIView):
     queryset = MainUser.objects.filter(is_staff=False, is_active=True)
     serializer_class = UserDetailsSerializer
     lookup_field = 'pk'
+
+    def get(self, request, pk):
+        try:
+            user = MainUser.objects.get(pk=pk)
+        except MainUser.DoesNotExist:
+            return Response(data={"error": "not found"}, status=status.HTTP_404_NOT_FOUND) 
+        else:
+            user_serializer = self.serializer_class(instance=user)
+            posts = Post.objects.filter(author=user)
+            posts_serializer = UsersPostsListSerializer(instance=posts, many=True)
+            data = {
+                "object": user_serializer.data,
+                "posts": posts_serializer.data
+                }
+            return Response(data=data, status=status.HTTP_200_OK)
 
 
 class UserUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):

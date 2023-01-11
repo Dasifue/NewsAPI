@@ -4,16 +4,22 @@ from ..models import Category
 
 import random
 
-class CategorySerializer(ModelSerializer):
+class CategoresListSerializer(ModelSerializer):
     class Meta:
         model = Category
-        fields = ("id","name","slug")
+        fields = (
+            "id",
+            "name",
+            "slug"
+            )
 
 
 class CategoryCreateSerializer(ModelSerializer):
     class Meta:
         model = Category
-        fields = ("name",)
+        fields = (
+            "name",
+            )
 
     def _set_title(self):
         name = self.validated_data.get("name").capitalize()
@@ -26,14 +32,29 @@ class CategoryCreateSerializer(ModelSerializer):
         slug = f"{name}{coding}"
         self.validated_data["slug"] = slug
 
-    def create(self):
+    def create(self, request):
         self._set_title()
         self._set_slug()
         name = self.validated_data.get("name")
         slug = self.validated_data.get("slug")
-        Category.objects.create(
+        category = Category.objects.create(
             name = name,
             slug = slug
         )
+        category.save()
+        return category
 
 
+class CategoryDetailsSerializer(ModelSerializer):
+    class Meta:
+        model = Category
+        fields = "__all__"
+
+
+class CategoryUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = Category
+        fields = (
+            "name",
+            "slug"
+        )
