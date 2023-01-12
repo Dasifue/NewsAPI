@@ -9,6 +9,12 @@ class ISAuthor(permissions.BasePermission):
         return False
 
     def has_object_permission(self, request, view, obj):
-        if obj.author.id == request.user.id:
-            return True
-        return False
+        try:
+            if obj.author.id == request.user.id:
+                return True
+            return False
+        except AttributeError:
+            if obj.Mainuser.id == request.user.id:
+                return True
+            return False
+

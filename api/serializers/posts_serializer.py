@@ -12,7 +12,8 @@ class PostsListSerializer(ModelSerializer):
             "author",
             "title",
             "short_description",
-            "image"
+            "image",
+            "created_at"
         )
 
 
@@ -31,15 +32,19 @@ class UsersPostsListSerializer(ModelSerializer):
             "slug",
             "title",
             "short_description",
-            "image"
+            "image",
+            "created_at",
             )
 
 class UserPostRetrieveUpdateDestroySerializer(ModelSerializer):
     class Meta:
         model = Post
         fields = (
+            "id",
+            "slug",
             "title",
             "short_description",
             "description",
-            "image"
+            "image",
+            "created_at"
         )
