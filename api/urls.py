@@ -13,6 +13,12 @@ from .views.posts import (
     UserPostRetrieveUpdateDestroyAPIView
 )
 
+from .views.favorite_posts import (
+    FavoritePostsListAPIView,
+    FavoritePostCreateAPIView,
+    FavoritePostsDeleteAPIView
+)
+
 app_name = "api"
 
 urlpatterns = [
@@ -23,5 +29,9 @@ urlpatterns = [
     path("posts/list/", PostsListAPIView.as_view(), name="posts"),
     path("posts/details/<str:slug>", PostDetailsAPIView.as_view(), name="post_details"),
     path("posts/user/", UsersPostsAPIView.as_view(), name="users_posts"),
-    path("posts/update/<str:slug>", UserPostRetrieveUpdateDestroyAPIView.as_view(), name="post_update")
+    path("posts/update/<str:slug>", UserPostRetrieveUpdateDestroyAPIView.as_view(), name="post_update"),
+
+    path("user/favorite/list/", FavoritePostsListAPIView.as_view(), name="favorite_posts"),
+    path("user/favorite/create/", FavoritePostCreateAPIView.as_view(), name="favorite_post_create"),
+    path("user/favorite/delete/<int:pk>", FavoritePostsDeleteAPIView.as_view(), name="delete_favorite_post")
 ]
