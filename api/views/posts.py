@@ -3,7 +3,7 @@ from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDe
 from rest_framework.response import Response
 from rest_framework import status
 
-from ..models import Post
+from ..models import Post, Comment
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from ..permissions import ISAuthor
@@ -13,6 +13,10 @@ from ..serializers.posts_serializer import (
     PostDetailsSerializer,
     UsersPostsListSerializer,
     UserPostRetrieveUpdateDestroySerializer
+)
+
+from ..serializers.comments_serializer import (
+    CommentsListSerializer
 )
 
 
@@ -27,6 +31,21 @@ class PostDetailsAPIView(RetrieveAPIView):
     queryset = Post.objects.all()
     lookup_field = "slug"
     serializer_class = PostDetailsSerializer
+
+    def get(self, request, slug):
+        try:
+            post = self.model.objects.get(slug=slug)
+        except Post.DoesNotExist:
+            return Response(data={"error":"not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            comments = Comment.objects.filter(post=post.id)
+            post_serializer = self.serializer_class(instance=post)
+            comment_serializer = CommentsListSerializer(instance=comments, many=True)
+            data = {
+                "post": post_serializer.data,
+                "comments": comment_serializer.data
+                }
+            return Response(data=data, status=status.HTTP_200_OK)
 
 
 class UsersPostsAPIView(APIView):
