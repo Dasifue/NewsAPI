@@ -22,7 +22,7 @@ class Post(models.Model):
     short_description = models.CharField(max_length=400)
     description = models.TextField(null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="post_images")
+    image = models.ImageField(upload_to="post_images", null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     slug = models.SlugField(unique=True)

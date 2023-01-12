@@ -9,6 +9,7 @@ from .views.categories import (
 from .views.posts import (
     PostsListAPIView,
     PostDetailsAPIView,
+    PostCreateAPIView,
     UsersPostsAPIView,
     UserPostRetrieveUpdateDestroyAPIView
 )
@@ -33,6 +34,7 @@ urlpatterns = [
 
     path("posts/list/", PostsListAPIView.as_view(), name="posts"),
     path("posts/details/<str:slug>", PostDetailsAPIView.as_view(), name="post_details"),
+    path("posts/create/", PostCreateAPIView.as_view(), name="post_create"),
     path("posts/user/", UsersPostsAPIView.as_view(), name="users_posts"),
     path("posts/update/<str:slug>", UserPostRetrieveUpdateDestroyAPIView.as_view(), name="post_update"),
 
