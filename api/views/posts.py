@@ -12,7 +12,8 @@ from ..serializers.posts_serializer import (
     PostsListSerializer,
     PostDetailsSerializer,
     UsersPostsListSerializer,
-    UserPostRetrieveUpdateDestroySerializer
+    UserPostRetrieveUpdateDestroySerializer,
+    PostCreateSerializer
 )
 
 from ..serializers.comments_serializer import (
@@ -68,3 +69,9 @@ class UserPostRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     lookup_field = "slug"
     permission_classes = (ISAuthor,)
+
+
+class PostCreateAPIView(CreateAPIView):
+    model = Post
+    serializer_class = PostCreateSerializer
+    permission_classes = (IsAuthenticated,)
