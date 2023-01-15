@@ -12,7 +12,8 @@ from ..models import Comment
 
 from ..serializers.comments_serializer import (
     CommentsCreateSerializer,
-    CommentUpdateDestroySerializer
+    CommentUpdateDestroySerializer,
+    CommentToCommentCreateSerializer
 )
 
 class CommentCreateAPIView(CreateAPIView):
@@ -27,3 +28,9 @@ class CommentUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = CommentUpdateDestroySerializer
     lookup_field = "pk"
     permission_classes = (ISAuthor,)
+
+
+class CommentToCommentCreateAPIView(CreateAPIView):
+    model = Comment
+    serializer_class = CommentToCommentCreateSerializer
+    permission_classes = (IsAuthenticated,)

@@ -22,7 +22,8 @@ from .views.favorite_posts import (
 
 from .views.comments import (
     CommentCreateAPIView,
-    CommentUpdateDestroyAPIView
+    CommentUpdateDestroyAPIView,
+    CommentToCommentCreateAPIView
 )
 
 app_name = "api"
@@ -43,5 +44,6 @@ urlpatterns = [
     path("user/favorite/delete/<int:pk>", FavoritePostsDeleteAPIView.as_view(), name="delete_favorite_post"),
 
     path("posts/comment/create/", CommentCreateAPIView.as_view(), name="comment_create"),
-    path("posts/comment/update/<int:pk>", CommentUpdateDestroyAPIView.as_view(), name="comment_update")
+    path("posts/comment/update/<int:pk>", CommentUpdateDestroyAPIView.as_view(), name="comment_update"),
+    path("posts/comment/comment/create/", CommentToCommentCreateAPIView.as_view(), name="comment_to_comment_create")
 ]
