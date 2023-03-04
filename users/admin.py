@@ -4,4 +4,18 @@ from django.contrib import admin
 
 from .models import MainUser
 
-admin.site.register(MainUser)
+class AdminMainUser(admin.ModelAdmin):
+    list_display = (
+        "username",
+        "role"
+    )
+    list_filter = (
+        "role",
+        "age"
+    )
+    search_fields = (
+        "username",
+        "email"
+    )
+
+admin.site.register(MainUser, AdminMainUser)
