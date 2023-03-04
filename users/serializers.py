@@ -21,7 +21,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             "username", 
             "email",
             "password1", 
-            "password2"
+            "password2",
             )
 
     def to_capitalize(self):
@@ -56,7 +56,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             first_name = first_name,
             last_name = last_name,
             username = username,
-            email = email
+            email = email,
         )
         user.set_password(raw_password=password)
         user.save()
@@ -72,7 +72,8 @@ class UserDetailsSerializer(serializers.ModelSerializer):
             "first_name", 
             "last_name", 
             "username", 
-            "email"
+            "email",
+            "role",
             )
 
 
@@ -82,7 +83,8 @@ class UsersListSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "image", 
-            "username"
+            "username",
+            "role"
             )
 
 
@@ -94,7 +96,9 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "username",
-            "email"
+            "email",
+            "role",
+            "year_of_birth"
             )    
 
 
