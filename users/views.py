@@ -31,7 +31,9 @@ class UserCreateAPIView(CreateAPIView):
                 "username": "char field, max_length 150, unique, required",
                 "email": "email field, not required",
                 "password1": "char field, max_length 128, required",
-                "password2": "char field, max_length 128, required"
+                "password2": "char field, max_length 128, required",
+                "date of year": "date filed, not required",
+                "role": "char field, max_length 250, not required"
             }
         }
         return Response(data=data, status=status.HTTP_200_OK)
@@ -82,10 +84,12 @@ class UserUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         user = self.request.user
+        user = MainUser.objects.get(username=user)
         return user
 
     def get(self, request):
         self.object = self.get_object()
+        print(self.object)
         if self.object:
             ser = self.serializer_class(instance=self.object)
             return Response(ser.data, status=status.HTTP_200_OK)
@@ -93,7 +97,7 @@ class UserUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):
 
     def put(self, request):
         self.object = self.get_object()
-        serializer = self.serializer_class(instance=self.object, data=request.data)
+        serializer = self.serializer_class(instance=self.object, data=request.data, many=False)
         if serializer.is_valid():
             serializer.save()
             return Response(data=serializer.validated_data, status=status.HTTP_200_OK)
@@ -101,7 +105,7 @@ class UserUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):
 
     def patch(self, request):
         self.object = self.get_object()
-        serializer = self.serializer_class(instance=self.object, data=request.data, partial=True)
+        serializer = self.serializer_class(instance=self.object, data=request.data, partial=True, many=False)
         if serializer.is_valid():
             serializer.save()
             return Response(data=serializer.validated_data, status=status.HTTP_200_OK)
