@@ -23,7 +23,8 @@ from users.views import (
     UsersListAPIView,
     UserDetailsAPIView,
     UserUpdateDeleteAPIView,
-    UserPasswordUpdateAPIView
+    UserPasswordUpdateAPIView,
+    UserSelfDetailsAPIView
     )
 
 urlpatterns = [
@@ -34,5 +35,6 @@ urlpatterns = [
     path('api/user/details/<int:pk>', UserDetailsAPIView.as_view(), name="user_details"),
     path('api/user/update/', UserUpdateDeleteAPIView.as_view(), name="user_update"),
     path('api/user/change_password/', UserPasswordUpdateAPIView.as_view(), name="password_update"),
+    path('api/user/details/', view=UserSelfDetailsAPIView.as_view(), name="self_details"),
     path('api/', include('api.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

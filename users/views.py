@@ -75,7 +75,24 @@ class UserDetailsAPIView(RetrieveAPIView):
                 "posts": posts_serializer.data
                 }
             return Response(data=data, status=status.HTTP_200_OK)
+        
 
+class UserSelfDetailsAPIView(APIView):
+    queryset = MainUser.objects.filter(is_staff=False, is_active=True)
+    serializer_class = UserDetailsSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        user = MainUser.objects.get(username=request.user)
+        user_serializer = self.serializer_class(instance=user)
+        posts = Post.objects.filter(author=user)
+        posts_serializer = UsersPostsListSerializer(instance=posts, many=True)
+        data = {
+            "object": user_serializer.data,
+            "posts": posts_serializer.data
+            }
+        return Response(data=data, status=status.HTTP_200_OK)
+        
 
 class UserUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):
     model = MainUser
